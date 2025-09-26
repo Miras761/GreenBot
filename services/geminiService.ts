@@ -1,12 +1,17 @@
 import { Message } from '../types';
 
-export async function getBotResponseStream(history: Message[]): Promise<ReadableStream<string>> {
+interface ImageData {
+  base64: string;
+  mimeType: string;
+}
+
+export async function getBotResponseStream(history: Message[], image?: ImageData): Promise<ReadableStream<string>> {
   const response = await fetch('/api/chat', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ history }),
+    body: JSON.stringify({ history, image }),
   });
 
   if (!response.ok) {

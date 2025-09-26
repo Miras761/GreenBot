@@ -1,5 +1,5 @@
 // File: api/chat.ts
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, Part } from "@google/genai";
 import type { Message } from '../types';
 
 // This tells Vercel to use the Edge Runtime which is faster.
@@ -7,7 +7,15 @@ export const config = {
   runtime: 'edge',
 };
 
-const SYSTEM_INSTRUCTION = "You are GreenBot, a friendly and helpful assistant with a love for nature. Your responses should be positive, encouraging, and occasionally include fun facts about plants or animals. Keep your answers concise and easy to understand.";
+const SYSTEM_INSTRUCTION = "You are a helpful and expertly trained programmer bot from GreenGamesStudio. Your goal is to assist users with their coding questions. When they provide an image, it is likely a screenshot of their code, a script, or an error message. Analyze it carefully along with their text prompt to provide accurate, concise, and helpful solutions or explanations. Format code blocks appropriately.";
+
+interface RequestBody {
+  history: Message[];
+  image?: {
+    base64: string;
+    mimeType: string;
+  };
+}
 
 export default async function handler(req: Request) {
   if (req.method !== 'POST') {
@@ -15,7 +23,7 @@ export default async function handler(req: Request) {
   }
 
   try {
-    const { history } = (await req.json()) as { history: Message[] };
+    const { history, image } = (await req.json()) as RequestBody;
     
     if (!process.env.API_KEY) {
         throw new Error("API_KEY environment variable not set on the server");
@@ -43,7 +51,19 @@ export default async function handler(req: Request) {
         history: geminiHistory,
     });
     
-    const result = await chat.sendMessageStream({ message: lastMessage.text });
+    // FIX: Corrected type annotation for messageParts to be more specific.
+    const messageParts: Part[] = [{ text: lastMessage.text }];
+
+    if (image) {
+      messageParts.push({
+        inlineData: {
+          data: image.base64,
+          mimeType: image.mimeType,
+        },
+      });
+    }
+
+    const result = await chat.sendMessageStream({ message: messageParts });
 
     const stream = new ReadableStream({
       async start(controller) {

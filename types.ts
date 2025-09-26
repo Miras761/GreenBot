@@ -1,4 +1,3 @@
-
 export enum Sender {
   USER = 'USER',
   BOT = 'BOT',
@@ -6,6 +5,7 @@ export enum Sender {
 
 export interface Message {
   id: string;
-  text: string;
   sender: Sender;
+  text: string;
+  imageUrl?: string;
 }

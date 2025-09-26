@@ -10,9 +10,9 @@ const Header: React.FC = () => {
       </div>
       <div className="ml-4">
         <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-600 to-teal-500 dark:from-green-400 dark:to-teal-300">
-          GreenBot
+          GGStudio Bot
         </h1>
-        <p className="text-sm text-green-700 dark:text-green-400 opacity-80">Online</p>
+        <p className="text-sm text-green-700 dark:text-green-400 opacity-80">Coding Assistant</p>
       </div>
     </div>
   );

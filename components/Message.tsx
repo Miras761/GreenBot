@@ -23,7 +23,12 @@ const MessageComponent: React.FC<MessageProps> = ({ message }) => {
             : 'bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-bl-none'
         }`}
       >
-        <p className="whitespace-pre-wrap">{message.text}</p>
+        {message.text && <p className="whitespace-pre-wrap">{message.text}</p>}
+        {message.imageUrl && (
+          <div className={`mt-${message.text ? '2' : '0'} rounded-lg overflow-hidden`}>
+            <img src={message.imageUrl} alt="User attachment" className="max-w-full h-auto" />
+          </div>
+        )}
       </div>
     </div>
   );
