@@ -51,7 +51,6 @@ export default async function handler(req: Request) {
         history: geminiHistory,
     });
     
-    // FIX: Corrected type annotation for messageParts to be more specific.
     const messageParts: Part[] = [{ text: lastMessage.text }];
 
     if (image) {
@@ -63,6 +62,7 @@ export default async function handler(req: Request) {
       });
     }
 
+    // FIX: chat.sendMessageStream expects an object with a `message` property.
     const result = await chat.sendMessageStream({ message: messageParts });
 
     const stream = new ReadableStream({

@@ -9,3 +9,9 @@ export interface Message {
   text: string;
   imageUrl?: string;
 }
+
+export interface ChatSession {
+  id: string;
+  title: string;
+  messages: Message[];
+}

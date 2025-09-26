@@ -12,9 +12,10 @@ interface ImageData {
 interface ChatInputProps {
   onSendMessage: (text: string, image?: ImageData) => void;
   isLoading: boolean;
+  disabled?: boolean;
 }
 
-const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, isLoading }) => {
+const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, isLoading, disabled = false }) => {
   const [text, setText] = useState('');
   const [image, setImage] = useState<ImageData | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -44,7 +45,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, isLoading }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if ((text.trim() || image) && !isLoading) {
+    if ((text.trim() || image) && !isLoading && !disabled) {
       onSendMessage(text, image);
       setText('');
       setImage(null);
@@ -76,8 +77,8 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, isLoading }) => {
         <button
           type="button"
           onClick={handleAttachClick}
-          disabled={isLoading}
-          className="p-3 text-gray-500 dark:text-gray-400 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 dark:focus:ring-offset-gray-800"
+          disabled={isLoading || disabled}
+          className="p-3 text-gray-500 dark:text-gray-400 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 dark:focus:ring-offset-gray-800 disabled:opacity-50"
           aria-label="Attach file"
         >
           <PaperclipIcon className="w-6 h-6" />
@@ -86,14 +87,14 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, isLoading }) => {
           type="text"
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="Ask about your code..."
+          placeholder={disabled ? "Select or create a new chat" : "Ask about your code..."}
           className="flex-1 px-5 py-3 bg-gray-100/50 dark:bg-gray-900/50 text-gray-800 dark:text-gray-200 border-2 border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-green-400 dark:focus:border-green-500 focus:bg-white dark:focus:bg-gray-700 transition-all duration-300"
-          disabled={isLoading}
+          disabled={isLoading || disabled}
           aria-label="Chat input"
         />
         <button
           type="submit"
-          disabled={isLoading || (!text.trim() && !image)}
+          disabled={isLoading || disabled || (!text.trim() && !image)}
           className="p-3 bg-gradient-to-br from-green-500 to-teal-500 text-white rounded-full disabled:opacity-50 disabled:cursor-not-allowed hover:from-green-600 hover:to-teal-600 transition-all duration-300 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 dark:focus:ring-offset-gray-800"
           aria-label="Send message"
         >
