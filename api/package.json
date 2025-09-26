@@ -1,0 +1,13 @@
+// File: package.json
+{
+  "name": "greenbot-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "GreenBot server-side handler",
+  "dependencies": {
+    "@google/genai": "^1.21.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

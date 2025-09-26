@@ -1,0 +1,5 @@
+{
+  "name": "GreenBot",
+  "description": "A friendly chatbot powered by Gemini, designed with a clean, green-themed interface to help you with your queries.",
+  "requestFramePermissions": []
+}
